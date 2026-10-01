@@ -1,0 +1,27 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+build/
+coverage/
+*.log
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+DerivedData/
+
+# Secrets
+.env
+.env.*
