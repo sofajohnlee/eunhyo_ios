@@ -1,0 +1,48 @@
+name: Generate Flutter iOS project
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  scaffold:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+          channel: stable
+          cache: true
+
+      - name: Generate iOS platform files
+        run: |
+          if [ ! -d ios ]; then
+            flutter create --platforms=ios .
+          fi
+          flutter pub get
+          flutter analyze
+
+      - name: Commit generated iOS project
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No generated changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios pubspec.yaml pubspec.lock
+          git commit -m "build: generate Flutter iOS project"
+          git push
